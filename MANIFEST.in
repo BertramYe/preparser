@@ -1,0 +1,13 @@
+include README.md
+include LICENSE
+
+# include setup.py   # no need include current package, which will auto include the setup.py file when uploaded into PyPI
+
+# get ride of the Pipfile files, as it just been use for the virtual environment building
+exclude Pipfile
+exclude test.py
+# exclude setup.py
+recursive-exclude *.egg-info *.*   # when running the python setup.py develop , it help generate files
+recursive-exclude preparser/__pycache__/ *.*.pyc   # when running the python setup.py develop , it help generate files
+# remove all __pycache__ directory's content from all of the directory
+# global-exclude *.pyc

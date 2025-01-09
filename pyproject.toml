@@ -1,0 +1,9 @@
+[tool.poetry]
+name = "preparser"
+version = "1.0.0"  # version is the same
+
+
+[build-system]
+requires = ["setuptools", "wheel"]   # point out build needed packages
+build-backend = "setuptools.build_meta"   # referece the parameters from the setup.py config
+

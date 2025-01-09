@@ -1,0 +1,7 @@
+*__pycache__
+Pipfile
+result
+test.py
+*.egg-info
+.pypirc
+dist
