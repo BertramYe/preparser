@@ -1,6 +1,6 @@
 include README.md
 include LICENSE
-
+include InstallHelper.py
 # include setup.py   # no need include current package, which will auto include the setup.py file when uploaded into PyPI
 
 # get ride of the Pipfile files, as it just been use for the virtual environment building
