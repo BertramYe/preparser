@@ -12,9 +12,10 @@ class Dynamicer():
     """
         install the Browser Core
     """
-    def __init__(self) -> None:
+    def __init__(self,ignore_https_errors:bool=False) -> None:
         self.browser_list = ['chromium','firefox','webkit']
         self._async_index = -1
+        self._ignore_https_errors = ignore_https_errors
         
     def _check_dynamic_async_env(self) -> int:
         installed_browser_index = -1
@@ -51,7 +52,8 @@ class Dynamicer():
                         browser = p.firefox.launch(headless=True)
                     else:
                         browser = p.webkit.launch(headless=True)
-                    page = browser.new_page()
+                
+                    page = browser.new_page(ignore_https_errors=self._ignore_https_errors)
                     page.goto(url)
                     html = None
                     if moniter_scope is not None:

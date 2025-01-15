@@ -39,6 +39,8 @@ class PreParser():
                                                                                                           `detached`: wait for element to not be present in DOM.
                                                                                                           `hidden`: wait for element to have non-empty bounding box and no `visibility:hidden`. Note that element,without any content or with `display:none` has an empty bounding box and is not considered visible.
                                                                                                           `visible`: wait for element to be either detached from DOM, or have an empty bounding box or `visibility:hidden`. This is opposite to the 'visible' option. 
+            ssl_certi_verified(bool): wheather need verify the ssl certi when requesting datas from urls, default is True, which means will verify the ssl certi to make the requesting safe.
+        
         Attributes:
             url_list(list):The list of URLs to parse from.
             request_call_back_func(Callable[[str,BeautifulSoup | Dict[str, Any]], bool] | None): The callback function to process the BeautifulSoup Or Json object.
@@ -49,7 +51,8 @@ class PreParser():
             stop_when_task_failed(bool): wheather need stop when you failed to get request from a Url.
             threading_numbers(int): The maximum number of threads.
             checked_same_site(bool): wheather need add more headers info to pretend requesting in a same site to parse datas, to resolve the CORS Block.
-            html_dynamic_scope(list[str,Literal['attached', 'detached', 'hidden', 'visible']] | None): to get and load specified scope html nodes resouce. 
+            html_dynamic_scope(list[str,Literal['attached', 'detached', 'hidden', 'visible']] | None): to get and load specified scope html nodes resouce.
+            ssl_certi_verified(bool): wheather need verify the ssl certi when requesting datas from urls. 
     """
     def __init__(self, 
                  url_list: list[str] = [],
@@ -62,6 +65,7 @@ class PreParser():
                  threading_numbers: int = 3,
                  checked_same_site:bool = True,
                  html_dynamic_scope:Moniter_Notes= None,  # await loaded contions
+                 ssl_certi_verified:bool = True
                 ) -> None:
         self.to_parse_urls = url_list
         self.start_threading = start_threading
@@ -74,7 +78,8 @@ class PreParser():
         self.stop_when_task_failed = stop_when_task_failed
         self.threading_mode:Literal['map','single'] = threading_mode
         self.tasker = Tasker(self.threading_mode,self._pre_parse_datas,self.to_parse_urls,self.threading_numbers,self.cached_data,self.stop_when_task_failed)
-        self.dynamicer= Dynamicer()
+        self._request_ssl_verified = ssl_certi_verified
+        self.dynamicer= Dynamicer(ignore_https_errors = not ssl_certi_verified)
         self._stop_running = False
         self._async_bundle_index = self._get_aync_bundle_index()
         self._html_dynamic_scope = html_dynamic_scope
@@ -114,7 +119,7 @@ class PreParser():
                     print(f'invalid parser_mode : {self.parser_mode}')
                     return None
                 else:
-                    respos = requests.get(url, headers=headers)
+                    respos = requests.get(url, headers=headers,verify=self._request_ssl_verified)
                 if respos.status_code == 200:
                     if self.parser_mode == 'html':
                         to_pass_next_data = BeautifulSoup(respos.text, 'html.parser')
