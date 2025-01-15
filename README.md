@@ -30,7 +30,7 @@ $ pip install preparser
 
 ## parameters
 
-here below are some of the parameters you can use for initai the Object `PreParser` from the package `preparser`:
+here below are some of the parameters you can use for initial the Object `PreParser` from the package `preparser`:
 
 
 |        Parameters      | Type                | Description                                               |
@@ -44,7 +44,7 @@ here below are some of the parameters you can use for initai the Object `PrePars
 | stop_when_task_failed | bool | wheather need stop when you failed to get request from a Url,default is `True` |
 | threading_numbers | int | The maximum number of threads in the threading pool. Default is `3`. |
 | checked_same_site | bool |  wheather need add more headers info to pretend requesting in a same site to parse datas, default is `True`,to resolve the `CORS` Block. |
-
+| html_dynamic_scope | list or None | point and get the specied scope dom of the whole page html, default is None,which stands for the whole page.<br />if this value was set, the parameter should be a list(2) Object. <br/> 1. the first value is a tag <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector"> selecter</a>. <br /> for example, 'div#main' mean a div tag with 'id=main', 'div.test' will get the the first matched div tag with 'class = test'. but don't make the selecter too complex or matched the mutiple parent dom, otherwise you can't get their inner_html() correctly or time out, and finally you can get the BeautifulSoup object of the inner_html from this selecter selected tag in the `request_call_back_func`. <br /> 2. the secound value should be one of the values below: <br />`attached`: wait for element to be present in DOM. <br />`detached`: wait for element to not be present in DOM. <br />`hidden`: wait for element to have non-empty bounding box and no 'visibility:hidden'. Note that element,without any content or with 'display:none' has an empty bounding box and is not considered visible. <br /> `visible`: wait for element to be either detached from DOM, or have an empty bounding box or 'visibility:hidden'. This is opposite to the 'visible' option. 
 
 ## example
 
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     parser = PreParser(
         url_list=url_list,
         request_call_back_func=handle_preparser_result,
-        parser_mode='api',    # this mode depands on you set, you can use the "api" or "html"
+        parser_mode='api',    # this mode depands on you set, you can use the "api", "html",or 'html_dynamic'
         start_threading=True,
         threading_mode='single',
         cached_data=True,
@@ -113,6 +113,8 @@ Get help ➡️ [Github issue](https://github.com/BertramYe/preparser/issues)
 
 
 # Update logs
+
+* `version 2.0.6 `: add the `html_dynamic_scope` parameters to let user can specified the whole dynamic parse scope, which can help faster the preparser speed when the `parser_mode` is `html_dynamic` . and resort the additional tools into the `ToolsHelper` package.
 
 * `version 2.0.5 `: remove the dynamic mode browser core install from setup into package call.
 

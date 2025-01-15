@@ -5,6 +5,9 @@ from subprocess import check_call
 from typing import Literal,Optional
 from playwright.sync_api import sync_playwright 
 
+
+Moniter_Notes = list[str,Literal['attached', 'detached', 'hidden', 'visible']] | None
+
 class Dynamicer():
     """
         install the Browser Core
@@ -38,7 +41,7 @@ class Dynamicer():
             self._async_index = installed_browser_index
             return installed_browser_index
     
-    def _get_dynamic_html(self,url:str) -> str | None:
+    def _get_dynamic_html(self,url:str,moniter_scope:Moniter_Notes = None) -> str | None:
         try:
             if 0 <= self._async_index < 3:
                 with sync_playwright() as p:
@@ -50,13 +53,27 @@ class Dynamicer():
                         browser = p.webkit.launch(headless=True)
                     page = browser.new_page()
                     page.goto(url)
-                    html = page.content()
+                    html = None
+                    if moniter_scope is not None:
+                        target_element = page.wait_for_selector(moniter_scope[0],state=moniter_scope[1])
+                        if target_element:
+                            target_element.scroll_into_view_if_needed()
+                            html = target_element.as_element().inner_html()
+                            # print(target_element.eval_on_selector_all('.row', 'elements => elements.map(el => el.outerHTML)'))
+                        # stop all of rest pages resouce loading to faster the loading speed 
+                        page.route("**/*",lambda route,request:route.abort())
+                        # html = page.content()
+                        # stop specified type of resource loading, here below is the ['image', 'script'] two kind of the resouce type
+                        # page.route("**/*", lambda route, request: route.abort() if request.resource_type() in ['image', 'script'] else route.continue_())
+                    else:
+                        html = page.content()
+                    page.close()
                     browser.close()
                     return html
             else:
                 return None
         except Exception as err:
-            print(f'error when doing dynamic html parse , error: {err} !')
+            print(f'error when parsing dynamic html , error: {err} !')
             return None
 
     def init_install_browser(self):
