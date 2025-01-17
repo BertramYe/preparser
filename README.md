@@ -115,6 +115,8 @@ Get help ➡️ [Github issue](https://github.com/BertramYe/preparser/issues)
 
 # Update logs
 
+* `version 2.0.8 `: add the func of `read_datas_from_file` into `Filer`, to help read the datas from the specified type files.
+
 * `version 2.0.7 `: add the `ssl_certi_verified` parameter to control weather ignored the error that caused by ssl certi verification when do the requesting.
 
 * `version 2.0.6 `: add the `html_dynamic_scope` parameters to let user can specified the whole dynamic parse scope, which can help faster the preparser speed when the `parser_mode` is `html_dynamic` . and resort the additional tools into the `ToolsHelper` package.

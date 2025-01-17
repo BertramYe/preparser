@@ -19,7 +19,7 @@ setup(
     name="preparser",  # packages name
     author="BertramYe",  # author name
     author_email="bertramyerik@gmail.com",  # author's email
-    version="2.0.7",  # pakage version
+    version="2.0.8",  # pakage version
     description="a slight preparser to help parse webpage content or get request from urls,which supports win, mac and unix.",  # short description
     long_description=long_description,  # get descrition from README.md
     long_description_content_type="text/markdown",  
